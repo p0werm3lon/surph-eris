@@ -1,42 +1,18 @@
 {
-	"compileOnSave": true,
 	"compilerOptions": {
-
-		"outDir": "dist/",
-		"sourceMap": true,
-		"lib": ["esnext"],
-		"module": "Node16",
-		"moduleResolution": "Node",
-		"target": "ES2020",
-
-		"esModuleInterop": true,
-		"resolveJsonModule": true,
-
-		"noUnusedParameters": true,
-
-		"alwaysStrict": true,
+		"target": "ESNext",
+		"module": "CommonJS",
 		"strict": true,
-
-		"allowSyntheticDefaultImports": true,
-		"declaration": true,
-		"declarationMap": true,
-		"emitDecoratorMetadata": true,
-
-		"experimentalDecorators": true,
-		"importHelpers": true,
-		"verbatimModuleSyntax": true,
-		"incremental": true,
-		"newLine": "lf",
-		"noEmitHelpers": true,
-		"noFallthroughCasesInSwitch": true,
-		"noImplicitReturns": true,
-		"noUnusedLocals": true,
-		"preserveConstEnums": true,
-		"pretty": true,
-		"removeComments": false,
-		"useDefineForClassFields": true
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"skipLibCheck": false,
+		"sourceMap": true,
+		"outDir": "dist/",
+		"baseUrl": "."
 	},
 	"exclude": [
+		"./dist/",
 		"node_modules",
 		"./node_modules",
 		"./node_modules/*",

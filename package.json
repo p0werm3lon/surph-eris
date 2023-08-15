@@ -1,30 +1,32 @@
 {
-  "name": "surph",
-  "version": "0.0.1-eris",
-  "description": "A hobby Discord bot coded by vvda.",
-  "main": "src/index.ts",
-  "repository": "https://github.com/p0werm3lon/surph",
-  "author": "vvda",
-  "license": "UNLICENSED",
-  "private": true,
-
-  "scripts": {
-    "dev": "yarn compile && yarn rundev",
-    "rundev": "NODE_ENV=development && node dist/src/index.js",
-    "compile": "rm -rf dist/ && tsc",
-    "start": "NODE_ENV=production && node dist/src/index.js",
-    "format": "prettier . --write"
-  },
-
-  "dependencies": {
-    "eris": "^0.17.2",
-    "signale": "^1.4.0",
-    "typescript": "^5.1.6"
-  },
-  "devDependencies": {
-    "@types/node": "^20.5.0",
-    "@types/signale": "^1.4.4",
-    "prettier": "^3.0.2",
-    "tsc": "^2.0.4"
-  }
+	"name": "surph",
+	"version": "0.0.1-eris",
+	"description": "A hobby Discord bot coded by vvda.",
+	"main": "src/index.ts",
+	"repository": "https://github.com/p0werm3lon/surph",
+	"author": "vvda",
+	"license": "UNLICENSED",
+	"private": true,
+	"scripts": {
+		"dev": "yarn compile && yarn rundev",
+		"rundev": "NODE_ENV=development && node dist/index.js",
+		"compile": "rm -rf dist/ && tsc",
+		"start": "NODE_ENV=production && node dist/index.js",
+		"format": "prettier . --write",
+		"lint": "eslint src/**"
+	},
+	"dependencies": {
+		"eris": "^0.17.2",
+		"signale": "^1.4.0",
+		"typescript": "^5.1.6"
+	},
+	"devDependencies": {
+		"@types/node": "^20.5.0",
+		"@types/signale": "^1.4.4",
+		"@typescript-eslint/eslint-plugin": "^6.4.0",
+		"@typescript-eslint/parser": "^6.4.0",
+		"eslint": "8.47.0",
+		"prettier": "3.0.2",
+		"tsc": "^2.0.4"
+	}
 }

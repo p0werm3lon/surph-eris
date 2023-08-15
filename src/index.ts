@@ -1,3 +1,3 @@
-import signale from "signale";
+import signale from 'signale';
 
 signale.fatal('test');
