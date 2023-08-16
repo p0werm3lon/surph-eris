@@ -7,13 +7,17 @@
 	"author": "vvda",
 	"license": "UNLICENSED",
 	"private": true,
-
 	"imports": {
-		"@surph/classes/*": ["./dist/src/classes/*"],
-		"@surph/modules/*": ["./dist/src/modules/*"],
-		"@surph/config": ["./config.ts"]
+		"@surph/classes/*": [
+			"./dist/src/classes/*"
+		],
+		"@surph/modules/*": [
+			"./dist/src/modules/*"
+		],
+		"@surph/config": [
+			"./config.ts"
+		]
 	},
-
 	"scripts": {
 		"dev": "yarn compile && yarn rundev",
 		"rundev": "NODE_ENV=development && node dist/src/index.js",
@@ -23,11 +27,15 @@
 		"lint": "eslint src/**"
 	},
 	"dependencies": {
+		"@sapphire/duration": "^1.1.0",
+		"better-sqlite3": "^8.5.0",
 		"eris": "^0.17.2",
+		"quick.db": "^9.1.7",
 		"signale": "^1.4.0",
 		"typescript": "^5.1.6"
 	},
 	"devDependencies": {
+		"@types/better-sqlite3": "^7.6.4",
 		"@types/node": "^20.5.0",
 		"@types/signale": "^1.4.4",
 		"@types/ws": "^8.5.5",

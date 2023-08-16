@@ -16,16 +16,18 @@ const getrefmsg = (msg: Message) => {
     if (!msg.referencedMessage) return null;
     return msg.referencedMessage;
 }
+export const urlregex = /https?:\/\/[^\s/$.?#].[^\s]*/gi;
 export const getmedia = (msg: Message, fromRef?: boolean): string | null => {
     const ref = getrefmsg(msg);
     if (ref && !fromRef) { return getmedia(ref, true) }
     if (msg.attachments.length != 0) return msg.attachments[0].url; // todo: add option to pick from multiple attachments
         //                                                             like a flag: --choose 1 or -c 1
     else {
-        const match = msg.content.match(/https?:\/\/[^\s/$.?#].[^\s]*/gi);
+        const match = msg.content.match(urlregex);
         if (!match) return null;
         return match[0];
     }
 }
 
 export const now = () => { return Math.floor(performance.timeOrigin + performance.now()) }; // can't believe this works
+export const t2s = (num: number) => { return Math.floor(num / 1000) };

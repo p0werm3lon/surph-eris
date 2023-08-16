@@ -2,11 +2,15 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"module": "NodeNext",
+
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"skipLibCheck": true,
+
 		"strict": true,
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
 		"esModuleInterop": true,
-		"skipLibCheck": false,
 		"sourceMap": true,
 		"outDir": "dist/",
 	},

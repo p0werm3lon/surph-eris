@@ -1,6 +1,7 @@
 import path from "path";
 import { JsonResponse } from "./jsonRoutes";
 import { MediaResponse } from "./mediaRoutes";
+import signale from "signale";
 
 interface FailedResponse {
     success: boolean,
@@ -15,6 +16,22 @@ const s2h = (str:string) => {
     return x;
 }
 
+const kpa = async () => {
+    try {
+        const ping = await fetch(`http://127.0.0.1:8738`);
+        if (ping.status != 200) return { success: false, reason: `Keepalive sent ${ping.status} instead of 200` };
+        else return {success:true}
+    } catch (e) {
+        return { success: false, reason: 'Keepalive request failed, check status of API or some commands won\'t work' };
+    }
+}
+
+export const keepalive = async () => {
+    kpa().then(res => {
+            if (res.success == false) signale.fatal(res.reason);
+    });
+}
+
 export const req = async (endpoint: string, req: object, buffer?: boolean) => {
 
     let args = `?`;
@@ -27,7 +44,7 @@ export const req = async (endpoint: string, req: object, buffer?: boolean) => {
     }
     const url = `http://127.0.0.1:8738/${endpoint}${args}`.slice(0, -1);
     const send = await fetch(url, { method: 'POST' });
-    if (send.status != 200) return {success: false, reason: await send.text()} as FailedResponse;
+    if (send.status != 200) { signale.warn(send.text()); return { success: false, reason: await send.text() } as FailedResponse; }
 
     const contentheader = send.headers.get('content-disposition');
     if (!contentheader) buffer = false;

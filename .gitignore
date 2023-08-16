@@ -1,7 +1,9 @@
 node_modules
 dist
 tests
+db
 
+json.sqlite
 config.ts
 tsconfig.tsbuildinfo
 yarn.lock
