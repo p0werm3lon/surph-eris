@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"module": "CommonJS",
+		"module": "NodeNext",
 		"strict": true,
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
@@ -9,7 +9,6 @@
 		"skipLibCheck": false,
 		"sourceMap": true,
 		"outDir": "dist/",
-		"baseUrl": "."
 	},
 	"exclude": [
 		"./dist/",

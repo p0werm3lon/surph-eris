@@ -7,11 +7,18 @@
 	"author": "vvda",
 	"license": "UNLICENSED",
 	"private": true,
+
+	"imports": {
+		"@surph/classes/*": ["./dist/src/classes/*"],
+		"@surph/modules/*": ["./dist/src/modules/*"],
+		"@surph/config": ["./config.ts"]
+	},
+
 	"scripts": {
 		"dev": "yarn compile && yarn rundev",
-		"rundev": "NODE_ENV=development && node dist/index.js",
-		"compile": "rm -rf dist/ && tsc",
-		"start": "NODE_ENV=production && node dist/index.js",
+		"rundev": "NODE_ENV=development && node dist/src/index.js",
+		"compile": "rm -rf dist/ && tsc && tsc-alias",
+		"start": "NODE_ENV=production && node dist/src/index.js",
 		"format": "prettier . --write",
 		"lint": "eslint src/**"
 	},
@@ -23,10 +30,13 @@
 	"devDependencies": {
 		"@types/node": "^20.5.0",
 		"@types/signale": "^1.4.4",
+		"@types/ws": "^8.5.5",
 		"@typescript-eslint/eslint-plugin": "^6.4.0",
 		"@typescript-eslint/parser": "^6.4.0",
 		"eslint": "8.47.0",
 		"prettier": "3.0.2",
-		"tsc": "^2.0.4"
+		"ts-node": "^10.9.1",
+		"tsc": "^2.0.4",
+		"tsc-alias": "^1.8.7"
 	}
 }

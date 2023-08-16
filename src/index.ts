@@ -1,3 +1,5 @@
-import signale from 'signale';
+// import signale from 'signale';
 
-signale.fatal('test');
+import { Surph } from "./classes/Surph";
+
+new Surph().start();
