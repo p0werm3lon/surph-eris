@@ -1,12 +1,5 @@
 import path from "path";
-import { JsonResponse } from "./jsonRoutes";
-import { MediaResponse } from "./mediaRoutes";
 import signale from "signale";
-
-interface FailedResponse {
-    success: boolean,
-    reason: string;
-}
 
 const s2h = (str:string) => {
     let x = '';
@@ -19,38 +12,65 @@ const s2h = (str:string) => {
 const kpa = async () => {
     try {
         const ping = await fetch(`http://127.0.0.1:8738`);
-        if (ping.status != 200) return { success: false, reason: `Keepalive sent ${ping.status} instead of 200` };
+        if (ping.status != 200) return { success: false, json: { reason: `Keepalive sent ${ping.status} instead of 200` } };
         else return {success:true}
     } catch (e) {
-        return { success: false, reason: 'Keepalive request failed, check status of API or some commands won\'t work' };
+        return { success: false, json: { reason: 'Keepalive request failed, check status of API or some commands won\'t work' } };
     }
 }
 
 export const keepalive = async () => {
     kpa().then(res => {
-            if (res.success == false) signale.fatal(res.reason);
+            if (res.success == false && res.json) signale.fatal(res.json.reason);
     });
 }
 
-export const req = async (endpoint: string, req: object, buffer?: boolean) => {
 
-    let args = `?`;
+interface SuccessResponse {
+    success: true;
+}
 
-    for (const [key, value] of Object.entries(req)) {
-        args += `${key}=${(
-            key == 'url' || typeof parseInt(value) == "number"
-        ) ? encodeURI(value) : s2h(value)}&`;
-        // hex encode anything that isn't a URL
+export interface ErrorResponse {
+    success: false;
+    reason: string;
+}
+
+interface MediaResponse extends SuccessResponse {
+    buffer: Buffer;
+    ext: string;
+}
+
+interface JsonResponse extends SuccessResponse {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    json: Record<string, any>;
+}
+
+type ApiResponse = MediaResponse | JsonResponse | ErrorResponse;
+
+export const req = async (endpoint: string, obj: object): Promise<ApiResponse> => {
+    try {
+
+        let args = `?`;
+
+        for (const [key, value] of Object.entries(obj)) {
+            args += `${key}=${(
+                key == 'url' || !isNaN(parseInt(value))
+            ) ? encodeURI(value) : s2h(value)}&`;
+            // hex encode anything that isn't a URL
+        }
+        const url = `http://127.0.0.1:8738/${endpoint}${args}`.slice(0, -1);
+        const send = await fetch(url, { method: 'POST' });
+        if (send.status != 200) { /*signale.warn('Fetcher: ' + await send.text());*/ return {success: false, reason: await send.text()} }
+        const mediaHeader = send.headers.get('content-disposition');
+        if (mediaHeader) {
+            const buffer = Buffer.from(new Uint8Array(await send.arrayBuffer()));
+            return { success: true, buffer, ext: path.extname(mediaHeader) };
+        } else {
+            const json = await send.json();
+            return { success: true, json };
+        }
     }
-    const url = `http://127.0.0.1:8738/${endpoint}${args}`.slice(0, -1);
-    const send = await fetch(url, { method: 'POST' });
-    if (send.status != 200) { signale.warn(send.text()); return { success: false, reason: await send.text() } as FailedResponse; }
-
-    const contentheader = send.headers.get('content-disposition');
-    if (!contentheader) buffer = false;
-
-    if (buffer && contentheader)
-        return { success: true, buffer: Buffer.from(new Uint8Array(await send.arrayBuffer())), ext: path.extname(contentheader) } as MediaResponse;
-    else
-        return { success: true, json: await send.json() } as JsonResponse;
+    catch (e) {
+        return { success: false, reason:`${e}`};
+    }
 }

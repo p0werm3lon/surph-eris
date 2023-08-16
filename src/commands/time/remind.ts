@@ -39,7 +39,7 @@ export default {
                 if (isNaN(Number(id))) return reply('No/invalid reminder ID provided.', msg);
                 await delReminder(msg.author.id, id);
                 msg.addReaction('👌');
-            }, options: { aliases: ['remove', 'del', 'rm', 'delete'] }
+            }, options: { aliases: ['remove', 'del', 'rm', 'delete'], usage: '<relative time> <info>' }
         } as Command
     ]
 } as Command

@@ -1,5 +1,3 @@
-// import signale from 'signale';
-
 import { Surph } from "./classes/Surph";
 import { keepalive } from "./modules/api/routes";
 import { continueWatching } from "./modules/reminders";
@@ -10,7 +8,7 @@ export const client = new Surph();
     keepalive();
 
     // Keepalive for API
-    setInterval(async () => {keepalive()}, 3000)
+    setInterval(async () => { keepalive() }, 300000); // Every 5 minutes
 
     continueWatching();
 

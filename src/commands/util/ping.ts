@@ -5,5 +5,5 @@ export default {
     name: 'ping',
     run: async (msg) => {
         reply('yoooo', msg);
-    }
+    }, options: { aliases: ['pong'] }
 } as Command

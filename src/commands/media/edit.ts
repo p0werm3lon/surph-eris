@@ -1,5 +1,6 @@
 import Command from "../../classes/Command";
 import { edit } from "../../modules/api/mediaRoutes";
+import { ErrorResponse } from "../../modules/api/routes";
 import { getmedia, now, reply, urlregex } from "../../modules/util";
 
 export default {
@@ -11,9 +12,9 @@ export default {
         if (!url) { reply('No media', msg); return; }
         if (!args) { reply('You didn\'t provide any arguments to edit the video with.', msg); return; }
 
-        const res = await edit(url, veb_args);
-        if (!res.success) { reply('There was an error editing your media. Please try again later.', msg); return; }
+        let res = await edit(url, veb_args);
+        if (!res.success) { res=res as ErrorResponse; reply('There was an error editing your media. ```' + res.reason + '```', msg); return; }
         reply('', msg, [{ file: res.buffer, name: `${now()}${res.ext}` }]);
     },
-    options: { aliases: ['veb', 'destroy', 'videoeditbot'] }
+    options: { aliases: ['veb', 'destroy', 'videoeditbot'], usage: '<VideoEditBot-like syntax args>' }
 } as Command
