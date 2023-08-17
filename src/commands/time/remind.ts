@@ -4,6 +4,7 @@ import { now, reply, t2s } from "../../modules/util";
 import { delReminder, setReminder } from "../../modules/reminders";
 import { getUser } from "../../modules/db";
 import * as chrono from 'chrono-node';
+import { ErrorEmbed, BasicMessage, ReminderList } from "../../modules/embeds";
 
 export default {
     name: 'remind',
@@ -13,7 +14,7 @@ export default {
         let time = (new Duration(argsjoined).fromNow).getTime();
         if (!time || isNaN(time)) {
             const newtime = chrono.parseDate(args.join(' '));
-            if (newtime === null) { reply('Invalid time.', msg); return; }
+            if (newtime === null) { reply({embed: ErrorEmbed('Invalid time.')}, msg); return; }
             else {
                 const nowtime = new Date(now()*1000);
                 newtime.setHours(
@@ -40,20 +41,20 @@ export default {
             name: 'list',
             run: async (msg) => {
                 const reminders = (await getUser(msg.author.id)).reminders;
-                if (reminders.length == 0) { reply('You have no reminders set.', msg); return; }
+                if (reminders.length == 0) { reply({embed: BasicMessage('You currently have no reminders set.')}, msg); return; }
 
-                let resp = ``;
+                const resp: string[] = [];
                 reminders.every(reminder => {
-                    resp += `\n<t:${reminder.timestamp}:f> • ${reminder.url} • \`${reminder.ids.msg}\`\n\`\`\`${reminder.info}\`\`\`\n`;
+                    resp.push(`<t:${reminder.timestamp}:f> • ${reminder.url} • \`${reminder.ids.msg}\`\n\`\`\`${reminder.info}\`\`\``);
                 });
-                reply(resp.slice(0, -1), msg);
+                reply({embed: ReminderList(resp)}, msg);
             }, options: { aliases: ['ls'] }
         } as Command,
         {
             name: 'delete',
             run: async (msg,args) => {
                 const id = args[0];
-                if (isNaN(Number(id))) return reply('No/invalid reminder ID provided.', msg);
+                if (isNaN(Number(id))) return reply({embed: ErrorEmbed('Invalid/no reminder ID provided.')}, msg);
                 await delReminder(msg.author.id, id);
                 msg.addReaction('👌');
             }, options: { aliases: ['remove', 'del', 'rm', 'delete'], usage: '<relative time> <info>' }

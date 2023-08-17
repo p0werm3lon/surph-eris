@@ -1,6 +1,7 @@
 import Command from "../../classes/Command";
 import { ocr, translate } from "../../modules/api/jsonRoutes";
 import { ErrorResponse } from "../../modules/api/routes";
+import { ErrorEmbed, Translation } from "../../modules/embeds";
 import { getOptions, getmedia, reply } from "../../modules/util";
 
 export default {
@@ -13,13 +14,13 @@ export default {
         if (!langTo) langTo = 'en';
 
         const url = await getmedia(msg);
-        if (!url) { reply('No media', msg); return; }
+        if (!url) { reply({embed: ErrorEmbed('Couldn\'t find anything to OCR.')}, msg); return; }
         let res = await ocr(url);
-        if (!res.success) { res = res as ErrorResponse; reply('There was an error OCRing your image.```' + res.reason + '```', msg); return; }
+        if (!res.success) { res = res as ErrorResponse; reply({ embed: ErrorEmbed('There was an error OCRing your image.```' + res.reason + '```') }, msg); return; }
         
         const t_res = await translate(res.json.text, langTo);
-        if (!t_res.success) { reply('There was an error translating your image. Please try again later.', msg); return; }
-        reply(`\`\`\`${t_res.json.text}\`\`\``, msg);
+        if (!t_res.success) { reply({embed: ErrorEmbed('There was an error translating your image. Please try again later.')}, msg); return; }
+        reply({embed: Translation(t_res.json.text)}, msg);
 
     },
     options: { aliases: ['ocrtranslate'], usage: '<media>' }

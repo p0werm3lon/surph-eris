@@ -1,4 +1,5 @@
 import { Embed, Message, MessageContent } from "eris";
+import { client } from "../index";
 
 export const reply = async (content: string | {embed?: Embed}, message: Message, files?: [{file: Buffer, name: string}]) => {
     const res: MessageContent = {
@@ -60,4 +61,9 @@ export const getFlags = (input: string): string[] => {
     }
 
     return matches;
+}
+
+export const reaction = {
+    add: async (msg: Message) => { await msg.addReaction('loading:1081977500319613039'); },
+    remove: async (msg: Message) => { await msg.removeReaction('loading:1081977500319613039', client.user.id); }
 }

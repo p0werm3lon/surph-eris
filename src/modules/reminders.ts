@@ -26,7 +26,7 @@ export interface ReminderTimeout {
 }
 
 const watch = async (reminder: DbReminder) => {
-    if (reminder.timestamp * 1000 > 2147483647) { signale.note(`Not polling reminder ${reminder.ids.msg} because it does not go off in the next ~24 days`); return; }
+    if (reminder.timestamp * 1000 > 2147483647) { signale.note(`Not polling reminder ${reminder.ids.msg} with timestamp ${reminder.timestamp} because it does not go off in the next ~24 days`); return; }
     client.timeouts.push(
         {
             mid: reminder.ids.msg,
@@ -45,7 +45,7 @@ export const continueWatching = async () => {
     const db = await pullDB();
     db.every(user => {
         user.value.reminders.every(async (reminder) => {
-            if ((reminder.timestamp*1000) > (now()*1000)) { await delReminder(reminder.ids.user, reminder.ids.msg); return; }
+            if ((reminder.timestamp*1000) < (now()*1000)) { await delReminder(reminder.ids.user, reminder.ids.msg); return; }
             if (client.timeouts.filter(x => x.mid === reminder.ids.msg)) return; // do not add if already watching (pls work)
             watch(reminder);
         });

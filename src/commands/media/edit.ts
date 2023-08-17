@@ -1,7 +1,7 @@
 import Command from "../../classes/Command";
 import { edit } from "../../modules/api/mediaRoutes";
 import { ErrorResponse } from "../../modules/api/routes";
-import { getmedia, now, reply, urlregex } from "../../modules/util";
+import { getmedia, now, reaction, reply, urlregex } from "../../modules/util";
 
 export default {
     name: 'edit',
@@ -11,8 +11,10 @@ export default {
 
         if (!url) { reply('No media', msg); return; }
         if (!args) { reply('You didn\'t provide any arguments to edit the video with.', msg); return; }
-
+        
+        await reaction.add(msg);
         let res = await edit(url, veb_args);
+        await reaction.remove(msg);
         if (!res.success) { res=res as ErrorResponse; reply('There was an error editing your media. ```' + res.reason + '```', msg); return; }
         reply('', msg, [{ file: res.buffer, name: `${now()}${res.ext}` }]);
     },
