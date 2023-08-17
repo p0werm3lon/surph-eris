@@ -1,21 +1,38 @@
 import { Duration } from "@sapphire/duration";
 import Command from "../../classes/Command";
-import { reply, t2s } from "../../modules/util";
+import { now, reply, t2s } from "../../modules/util";
 import { delReminder, setReminder } from "../../modules/reminders";
 import { getUser } from "../../modules/db";
+import * as chrono from 'chrono-node';
 
 export default {
     name: 'remind',
     run: async (msg, args) => {
         const argsjoined = args.join(' ');
-        const time = (new Duration(argsjoined).fromNow).getTime();
-        if (!time || isNaN(time)) { reply('Invalid time.', msg); return; }
+
+        let time = (new Duration(argsjoined).fromNow).getTime();
+        if (!time || isNaN(time)) {
+            const newtime = chrono.parseDate(args.join(' '));
+            if (newtime === null) { reply('Invalid time.', msg); return; }
+            else {
+                const nowtime = new Date(now()*1000);
+                newtime.setHours(
+                    nowtime.getHours(),
+                    nowtime.getMinutes(),
+                    nowtime.getSeconds()
+                )
+                time = newtime.getTime();
+            }
+           
+        }
+
+        time = t2s(time); // divide by 1000 so it can be stored properly
         
         setReminder(msg.author.id, {
             info: argsjoined, timestamp: time, url: msg.jumpLink,
             ids: { msg: msg.id, user: msg.author.id, channel: msg.channel.id }
         }).then(() => {
-            reply(`Your reminder has been added and goes off <t:${t2s(time)}:R>.`, msg)
+            reply(`Your reminder has been added and goes off <t:${time}:R>.`, msg)
         })
     }, options: { aliases: ['reminder', 'remindme'] },
     subcommands: [
@@ -27,7 +44,7 @@ export default {
 
                 let resp = ``;
                 reminders.every(reminder => {
-                    resp += `\n<t:${t2s(reminder.timestamp)}:f> • ${reminder.url} • \`${reminder.ids.msg}\`\n\`\`\`${reminder.info}\`\`\`\n`;
+                    resp += `\n<t:${reminder.timestamp}:f> • ${reminder.url} • \`${reminder.ids.msg}\`\n\`\`\`${reminder.info}\`\`\`\n`;
                 });
                 reply(resp.slice(0, -1), msg);
             }, options: { aliases: ['ls'] }

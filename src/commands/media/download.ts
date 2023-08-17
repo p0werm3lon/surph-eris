@@ -10,7 +10,10 @@ export default {
 
         let audioOnly = false;
         const flags = getFlags(args.join(' '));
-        if (flags.filter(x => x == "audio").length != 0) audioOnly = false;
+        if (
+            flags.filter(x => x == "audio").length != 0
+            || flags.filter(x => x == "a").length != 0
+        ) audioOnly = true;
 
         const url = await getmedia(msg);
         if (!url) { reply('No media', msg); return; }

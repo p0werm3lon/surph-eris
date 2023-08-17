@@ -29,8 +29,8 @@ export const getmedia = (msg: Message, fromRef?: boolean): string | null => {
     }
 }
 
-export const now = () => { return Math.floor(performance.timeOrigin + performance.now()) }; // can't believe this works
 export const t2s = (num: number) => { return Math.floor(num / 1000) };
+export const now = () => { return t2s(Math.floor(performance.timeOrigin + performance.now())) }; // can't believe this works
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const getOptions = (input: string): {options: any, formatted: string} => {
@@ -48,10 +48,14 @@ export const getOptions = (input: string): {options: any, formatted: string} => 
 
 export const getFlags = (input: string): string[] => {
     const flagPattern = /--(\w+)/g;
+    const shortFlagPattern = /-(\w+)/g;
     const matches = [];
     let match;
 
     while ((match = flagPattern.exec(input)) !== null) {
+        matches.push(match[1]);
+    }
+    while ((match = shortFlagPattern.exec(input)) !== null) {
         matches.push(match[1]);
     }
 
