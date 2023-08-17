@@ -16,12 +16,15 @@ export default {
             const newtime = chrono.parseDate(args.join(' '));
             if (newtime === null) { reply({embed: ErrorEmbed('Invalid time.')}, msg); return; }
             else {
-                const nowtime = new Date(now()*1000);
-                newtime.setHours(
-                    nowtime.getHours(),
-                    nowtime.getMinutes(),
-                    nowtime.getSeconds()
-                )
+                const nowtime = new Date(now() * 1000);
+                if ((newtime.getHours() == 0 && newtime.getMinutes() == 0 && newtime.getSeconds() == 0)
+                && (!args.join(' ').includes('midnight') || !args.join(' ').includes('12am'))) {
+                    newtime.setHours(
+                        nowtime.getHours(),
+                        nowtime.getMinutes(),
+                        nowtime.getSeconds()
+                    )
+                }
                 time = newtime.getTime();
             }
            

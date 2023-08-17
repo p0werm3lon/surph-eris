@@ -3,6 +3,7 @@ dist
 tests
 db
 
+.DS_Store
 json.sqlite
 config.ts
 tsconfig.tsbuildinfo
