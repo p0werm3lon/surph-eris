@@ -27,12 +27,12 @@ export interface ReminderTimeout {
 }
 
 const watch = async (reminder: DbReminder) => {
-    if (reminder.timestamp * 1000 > 2147483647) { signale.note(`Not polling reminder ${reminder.ids.msg} with timestamp ${reminder.timestamp} because it does not go off in the next ~24 days`); return; }
+    if (((reminder.timestamp*1000) - (now()*1000)) > 2**31) { signale.note(`Not polling reminder ${reminder.ids.msg} with timestamp ${reminder.timestamp} because it does not go off in the next ~24 days`); return; }
     client.timeouts.push(
         {
             mid: reminder.ids.msg,
             timeout: setTimeout(async () => {
-                signale.log(`Reminder with ID ${reminder.ids.msg} is finished polling`);
+                signale.info(`Reminder with ID ${reminder.ids.msg} is finished polling`);
                 const ref = await client.getMessage(reminder.ids.channel, reminder.ids.msg);
                 if (!ref) return; // cba
                 reply({embed: ReminderPing(reminder)}, ref);

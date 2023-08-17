@@ -47,7 +47,7 @@ export const ReminderList = (list: string[]): Embed => {
 
 export const ReminderPing = (reminder: DbReminder): Embed => {
     return {
-        color: 0x008000,
+        color: 0x90EE90,
         type: 'rich',
         description: `:bell: \`${reminder.info}\``
     };
