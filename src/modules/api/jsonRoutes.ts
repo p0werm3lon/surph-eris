@@ -1,9 +1,11 @@
 import { ErrorResponse, req } from "./routes";
+import * as he from 'he';
 
 const json_req = async (endpoint: string, obj: object) => {
     const request = await req(endpoint, obj);
     if ('buffer' in request) throw new Error('Wrong endpoint used!');
     if ('reason' in request) return request as ErrorResponse;
+    if (request.json.text) request.json.text = he.decode(request.json.text);
     return request as JsonResponse;
 }
 

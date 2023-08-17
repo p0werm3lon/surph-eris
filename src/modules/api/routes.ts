@@ -1,13 +1,6 @@
 import path from "path";
 import signale from "signale";
-
-const s2h = (str:string) => {
-    let x = '';
-    for(let i = 0; i < str.length; i++) {
-        x += str[i].charCodeAt(0).toString(16);
-    }
-    return x;
-}
+import { encode } from "./encoding";
 
 const kpa = async () => {
     try {
@@ -55,7 +48,7 @@ export const req = async (endpoint: string, obj: object): Promise<ApiResponse> =
         for (const [key, value] of Object.entries(obj)) {
             args += `${key}=${(
                 key == 'url' || !isNaN(parseInt(value))
-            ) ? encodeURI(value) : s2h(value)}&`;
+            ) ? encodeURI(value) : encode(value)}&`;
             // hex encode anything that isn't a URL
         }
         const url = `http://127.0.0.1:8738/${endpoint}${args}`.slice(0, -1);
