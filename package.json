@@ -1,6 +1,6 @@
 {
 	"name": "surph",
-	"version": "0.0.1-eris",
+	"version": "0.1-eris",
 	"description": "A hobby Discord bot coded by vvda.",
 	"main": "src/index.ts",
 	"repository": "https://github.com/p0werm3lon/surph",
