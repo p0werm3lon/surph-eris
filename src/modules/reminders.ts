@@ -3,6 +3,7 @@ import { now, reply } from "./util";
 import { client } from "../index";
 
 import signale from "signale";
+import { ReminderPing } from "./embeds";
 
 export const setReminder = async (uid:string, reminder: DbReminder) => {
     const user = await getUser(uid);
@@ -34,7 +35,7 @@ const watch = async (reminder: DbReminder) => {
                 signale.log(`Reminder with ID ${reminder.ids.msg} is finished polling`);
                 const ref = await client.getMessage(reminder.ids.channel, reminder.ids.msg);
                 if (!ref) return; // cba
-                reply(`Your reminder:\n\`\`\`${reminder.info}\`\`\``, ref);
+                reply({embed: ReminderPing(reminder)}, ref);
                 await delReminder(reminder.ids.user, reminder.ids.msg);
             }, ((reminder.timestamp*1000) - (now()*1000)))
         } as ReminderTimeout);
