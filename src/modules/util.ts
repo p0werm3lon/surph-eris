@@ -1,5 +1,6 @@
 import { Embed, Message, MessageContent } from "eris";
 import { client } from "../index";
+import * as path from "node:path";
 
 export const reply = async (content: string | {embed?: Embed}, message: Message, files?: [{file: Buffer, name: string}]) => {
     const res: MessageContent = {
@@ -61,6 +62,11 @@ export const getFlags = (input: string): string[] => {
     }
 
     return matches;
+}
+
+export const isSaneURL = (url: string, validExtensions: Array<string>): boolean => {
+    const u = new URL(url);
+    return ['http', 'https'].includes(u.protocol) && validExtensions.includes(path.extname(u.pathname));
 }
 
 export const reaction = {

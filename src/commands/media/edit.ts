@@ -1,7 +1,8 @@
 import Command from "../../classes/Command";
 import { edit } from "../../modules/api/mediaRoutes";
 import { ErrorResponse } from "../../modules/api/routes";
-import { getmedia, now, reaction, reply, urlregex } from "../../modules/util";
+import { ErrorEmbed } from "../../modules/embeds";
+import { getmedia, now, reaction, reply, urlregex, isSaneURL } from "../../modules/util";
 
 export default {
     name: 'edit',
@@ -10,6 +11,7 @@ export default {
         const veb_args = args.join(' ').replace(urlregex, '');
 
         if (!url) { reply('No media', msg); return; }
+        if(!isSaneURL(url, ['mp3', 'm4a', 'm4v', 'webm', 'mp4', 'mkv', 'mov', 'flac', 'wav', 'alac'])) { reply({embed: ErrorEmbed('Invalid media type.')}, msg); return; }
         if (!args) { reply('You didn\'t provide any arguments to edit the video with.', msg); return; }
         
         await reaction.add(msg);
