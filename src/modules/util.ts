@@ -66,6 +66,7 @@ export const getFlags = (input: string): string[] => {
 
 export const isSaneURL = (url: string, validExtensions: Array<string>): boolean => {
     const u = new URL(url);
+    // HACK: why the fuck does .protocol have a trailing `:`, and extname has leading `.`, i want to shit and piss
     return ['http:', 'https:'].includes(u.protocol) && validExtensions.includes(path.extname(u.pathname).slice(1));
 }
 
