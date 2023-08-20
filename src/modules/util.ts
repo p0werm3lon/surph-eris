@@ -66,7 +66,7 @@ export const getFlags = (input: string): string[] => {
 
 export const isSaneURL = (url: string, validExtensions: Array<string>): boolean => {
     const u = new URL(url);
-    return ['http:', 'https:'].includes(u.protocol) && validExtensions.includes(path.extname(u.pathname));
+    return ['http:', 'https:'].includes(u.protocol) && validExtensions.includes(path.extname(u.pathname).slice(1));
 }
 
 export const reaction = {
